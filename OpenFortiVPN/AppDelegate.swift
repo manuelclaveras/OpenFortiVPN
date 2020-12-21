@@ -33,8 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         panes: [
             Preferences.Pane(
                 identifier: .vpnconf,
-                 title: "General",
-                 toolbarIcon: NSImage(systemSymbolName: "gearshape", accessibilityDescription: "VPN Configuration")!
+                title: "General",
+                toolbarIcon: NSImage(systemSymbolName: "gearshape", accessibilityDescription: "VPN Configuration")!
             ) {
                 PreferencesView()
             }
@@ -64,10 +64,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction private func connectToVPN(_ sender: NSMenuItem) {
+        //Detect openfortivpn installation
+        if !openfortivpn.isOpenfortivpnInstalled() {
+            let alert = NSAlert()
+            alert.messageText = "Cannot find openfortivpn CLI"
+            alert.informativeText = """
+                By default, we search the usual folders. Usually this means the client has not been installed,
+                you can install it using Homebrew or Macports. If it's already installed, check the preferences
+                and provide the installation path.
+            """
+            alert.alertStyle = .critical
+            alert.addButton(withTitle: "Got it!")
+            alert.runModal()
+            return
+        }
+        
         if sender.state == NSControl.StateValue.on {
             //Ok let's kill it
             if openfortivpn.killBackgroundProcess() {
                 //Change the state of the menuitem
+                
                 sender.state = NSControl.StateValue.off
                 sender.title = "Connect"
                 self.killedByUser = true

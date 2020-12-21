@@ -36,7 +36,7 @@ class VPNProcessUtil {
         let cert = Defaults[.cert]
         
         let ascript: String = "do shell script \"/usr/local/bin/openfortivpn \(host):\(port) -u \(user) -p \(pwd) --trusted-cert \(cert) > /dev/null 2>&1 &\" with administrator privileges"
-
+        
         if let script = NSAppleScript(source: ascript) {
             NSLog("Starting openfortivpn")
             var err = NSDictionary()
@@ -74,6 +74,17 @@ class VPNProcessUtil {
         }
         
         return false
+    }
+    
+    ///This function verifies if the openfortivpn client is installed in the usual directories
+    ///
+    ///- parameters: No parameters
+    ///- returns: a boolean to indicate if it was found or not
+    func isOpenfortivpnInstalled() -> Bool {
+        let manager = FileManager.default
+        let info = ProcessInfo.processInfo
+        NSLog(info.environment["PATH"] ?? "Arf")
+        return manager.fileExists(atPath: "/usr/local/bin/sbin/openfortivpn")
     }
     
     private func getPid() -> Int? {
