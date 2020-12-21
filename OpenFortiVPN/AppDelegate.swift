@@ -10,6 +10,7 @@ import SwiftUI
 import Preferences
 import Defaults
 import Carbon
+import UserNotifications
 
 extension Preferences.PaneIdentifier {
     static let vpnconf = Self("vpnconf")
@@ -22,6 +23,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var window: NSWindow!
     var statusItem: NSStatusItem?
     var t: RepeatingTimer!
+    var killedByUser: Bool = false
+    var notificationSent: Bool = false
     let openfortivpn = VPNProcessUtil.instance
     @IBOutlet weak var menu: NSMenu?
     @IBOutlet weak var connectMenuItem: NSMenuItem?
@@ -39,7 +42,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     )
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to bootstrap your application
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])  {
+            success, error in
+                if success {
+                    NSLog("Great! Notifications accepted")
+                } else {
+                    NSLog(":(")
+                }
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -60,6 +70,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 //Change the state of the menuitem
                 sender.state = NSControl.StateValue.off
                 sender.title = "Connect"
+                self.killedByUser = true
                 return
             }
         }
@@ -71,16 +82,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             sender.state = NSControl.StateValue.on
             sender.title = "Disconnect"
             
-            t = RepeatingTimer(timeInterval: 60)
+            //Set the background process in charge of checking if
+            //the process is still running
+            t = RepeatingTimer(timeInterval: 20)
             t.eventHandler = {
                 let running = self.openfortivpn.isBackgroundProcessRunning()
                 if !running {
                     //Change the state of the menuitem
                     sender.state = NSControl.StateValue.off
                     sender.title = "Connect"
+                    
+                    //Send a notification
+                    if !self.killedByUser {
+                        self.sendNotification(
+                            title: "Connections wit VPN lost",
+                            subtitle: "",
+                            body: "Click on Connect to restart a new connection"
+                        )
+                    }
                 }
             }
             t.resume()
+            
+            //Send a notification to the user!
+            sendNotification(title: "Woohoo!", subtitle: "", body: "You're connected to the VPN")
         }
     }
 
@@ -93,6 +118,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let menu = menu {
             statusItem?.menu = menu
         }
+    }
+    
+    private func sendNotification(title: String, subtitle: String, body: String) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.subtitle = subtitle
+        content.body = body
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        let request = UNNotificationRequest(identifier: "openfortivpn.id.1", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 }
 
