@@ -34,8 +34,9 @@ class VPNProcessUtil {
         let host = Defaults[.serverAddress]
         let port = Defaults[.port]
         let cert = Defaults[.cert]
+        let path = Defaults[.defaultPath]
         
-        let ascript: String = "do shell script \"/usr/local/bin/openfortivpn \(host):\(port) -u \(user) -p \(pwd) --trusted-cert \(cert) > /dev/null 2>&1 &\" with administrator privileges"
+        let ascript: String = "do shell script \"\(path)/openfortivpn \(host):\(port) -u \(user) -p \(pwd) --trusted-cert \(cert) > /dev/null 2>&1 &\" with administrator privileges"
         
         if let script = NSAppleScript(source: ascript) {
             NSLog("Starting openfortivpn")

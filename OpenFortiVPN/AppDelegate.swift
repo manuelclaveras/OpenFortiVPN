@@ -110,7 +110,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             //Ok let's kill it
             if openfortivpn.killBackgroundProcess() {
                 //Change the state of the menuitem
-                
                 sender.state = NSControl.StateValue.off
                 sender.title = "Connect"
                 self.killedByUser = true
