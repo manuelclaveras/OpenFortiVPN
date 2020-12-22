@@ -14,6 +14,8 @@ import UserNotifications
 
 extension Preferences.PaneIdentifier {
     static let vpnconf = Self("vpnconf")
+    static let general = Self("general")
+    static let advanced = Self("advanced")
 }
 
 @available(OSX 11.0, *)
@@ -32,11 +34,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     lazy var preferencesWindowController = PreferencesWindowController(
         panes: [
             Preferences.Pane(
-                identifier: .vpnconf,
+                identifier: .general,
                 title: "General",
-                toolbarIcon: NSImage(systemSymbolName: "gearshape", accessibilityDescription: "VPN Configuration")!
+                toolbarIcon: NSImage(systemSymbolName: "gearshape", accessibilityDescription: "General configuration")!
+            ) {
+                GeneralPreferencesView()
+            },
+            Preferences.Pane(
+                identifier: .vpnconf,
+                title: "Configuration",
+                toolbarIcon: NSImage(systemSymbolName: "network", accessibilityDescription: "VPN Configuration")!
             ) {
                 PreferencesView()
+            },
+            Preferences.Pane(
+                identifier: .advanced,
+                title: "Advanced",
+                toolbarIcon: NSImage(systemSymbolName: "plus", accessibilityDescription: "Advanced configuration")!
+            ) {
+                AdvancedPreferencesView()
             }
         ]
     )
@@ -58,7 +74,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             openfortivpn.killBackgroundProcess()
         }
     }
-    
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+         
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem?.button?.image = NSImage(named: "Icon")
+        
+        if let menu = menu {
+            statusItem?.menu = menu
+        }
+    }
+
     @IBAction private func preferencesMenuItemActionHandler(_ sender: NSMenuItem) {
         preferencesWindowController.show()
     }
@@ -122,17 +149,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             //Send a notification to the user!
             sendNotification(title: "Woohoo!", subtitle: "", body: "You're connected to the VPN")
-        }
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-         
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem?.button?.image = NSImage(named: "Icon")
-        
-        if let menu = menu {
-            statusItem?.menu = menu
         }
     }
     

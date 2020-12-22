@@ -82,9 +82,16 @@ class VPNProcessUtil {
     ///- returns: a boolean to indicate if it was found or not
     func isOpenfortivpnInstalled() -> Bool {
         let manager = FileManager.default
-        let info = ProcessInfo.processInfo
-        NSLog(info.environment["PATH"] ?? "Arf")
-        return manager.fileExists(atPath: "/usr/local/bin/sbin/openfortivpn")
+        var defaultPaths = ["/usr/local/bin", "/opt/local/bin"]
+        
+        defaultPaths += [Defaults[.defaultPath]]
+            
+        var found = false
+        for path in defaultPaths {
+            found = manager.fileExists(atPath: "\(path)/openfortivpn")
+            if found { break }
+        }
+        return found
     }
     
     private func getPid() -> Int? {
