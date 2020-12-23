@@ -79,7 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         super.awakeFromNib()
          
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem?.button?.image = NSImage(named: "Icon")
+        statusItem?.button?.image = NSImage(named: "DisconnectIcon")
         
         if let menu = menu {
             statusItem?.menu = menu
@@ -112,6 +112,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 //Change the state of the menuitem
                 sender.state = NSControl.StateValue.off
                 sender.title = "Connect"
+                statusItem?.button?.image = NSImage(named: "DisconnectIcon")
+                statusItem?.button?.needsDisplay = true
                 self.killedByUser = true
                 return
             }
@@ -123,6 +125,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             //Change the state of the menuitem
             sender.state = NSControl.StateValue.on
             sender.title = "Disconnect"
+            statusItem?.button?.image = NSImage(named: "Icon")
+            statusItem?.button?.needsDisplay = true
             
             //Set the background process in charge of checking if
             //the process is still running
@@ -133,6 +137,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     //Change the state of the menuitem
                     sender.state = NSControl.StateValue.off
                     sender.title = "Connect"
+                    self.statusItem?.button?.image = NSImage(named: "DisconnectIcon")
+                    self.statusItem?.button?.needsDisplay = true
                     
                     //Send a notification
                     if !self.killedByUser {

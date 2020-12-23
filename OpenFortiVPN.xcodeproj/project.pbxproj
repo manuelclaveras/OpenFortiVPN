@@ -42,6 +42,7 @@
 		7E3EA327258D1AB800EAFB1A /* RepeatingTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatingTimer.swift; sourceTree = "<group>"; };
 		7E84156A258C0DF900D34B4E /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		7E84156D258CAD3200D34B4E /* VPNProcessUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNProcessUtil.swift; sourceTree = "<group>"; };
+		7EB696192593712C0000D82D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +61,7 @@
 		7E112226258A717400935F34 = {
 			isa = PBXGroup;
 			children = (
+				7EB696192593712C0000D82D /* README.md */,
 				7E112231258A717400935F34 /* OpenFortiVPN */,
 				7E3EA311258CDFCC00EAFB1A /* TestOpenFortiVPN */,
 				7E112230258A717400935F34 /* Products */,
