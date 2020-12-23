@@ -29,14 +29,8 @@ class VPNProcessUtil {
     ///- parameters: No parameters
     ///- returns: A boolean value to true if the process has been found
     func startBackgroundProcess() -> Bool {
-        let user = Defaults[.username]
-        let pwd = Defaults[.password]
-        let host = Defaults[.serverAddress]
-        let port = Defaults[.port]
-        let cert = Defaults[.cert]
-        let path = Defaults[.defaultPath]
         
-        let ascript: String = "do shell script \"\(path)/openfortivpn \(host):\(port) -u \(user) -p \(pwd) --trusted-cert \(cert) > /dev/null 2>&1 &\" with administrator privileges"
+        let ascript: String = "do shell script \"\(buildCommandLine())\" with administrator privileges"
         
         if let script = NSAppleScript(source: ascript) {
             NSLog("Starting openfortivpn")
@@ -122,5 +116,30 @@ class VPNProcessUtil {
             }
         }
         return nil
+    }
+    
+    private func buildCommandLine() -> String {
+        let user = Defaults[.username]
+        let pwd = Defaults[.password]
+        let host = Defaults[.serverAddress]
+        let port = Defaults[.port]
+        let cert = Defaults[.cert]
+        let path = Defaults[.defaultPath]
+        let shouldSetRoutes = Defaults[.shouldSetRoutes]
+        let shouldSetDNS = Defaults[.shouldSetDNS]
+        let shouldUseSyslog = Defaults[.shouldUseSyslog]
+        
+        var baseCmd = "\(path)/openfortivpn \(host):\(port) -u \(user) -p \(pwd) "
+        
+        if !cert.isEmpty {
+            baseCmd += "--trusted-cert \(cert) "
+        }
+        
+        baseCmd += "--set-dns=\(shouldSetDNS ? 1 : 0) "
+        baseCmd += "--set-routes=\(shouldSetRoutes ? 1 : 0) "
+        if shouldUseSyslog { baseCmd += "--use-syslog " }
+        baseCmd += " > /dev/null 2>&1 &"
+        
+        return baseCmd
     }
 }

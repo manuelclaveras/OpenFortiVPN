@@ -19,7 +19,6 @@ extension Defaults.Keys {
 struct AdvancedPreferencesView: View {
     @Default(.shouldSetRoutes) private var shouldSetRoutes
     @Default(.shouldSetDNS) private var shouldSetDNS
-    @Default(.shouldUseResolv) private var shouldUseResolv
     @Default(.shouldUseSyslog) private var shouldUseSyslog
     var body: some View {
         Text("Do not change anything in this section unless you really know what you are doing!")
@@ -37,14 +36,6 @@ struct AdvancedPreferencesView: View {
                 HStack {
                     Toggle("", isOn: $shouldSetDNS).toggleStyle(SwitchToggleStyle())
                     Text("Set if it should add DNS name servers in resolv.conf when  tunnel is  up")
-                        .frame(width: 200.0)
-                        .font(.system(size: 9, weight: .light))
-                }
-            }
-            Preferences.Section(title: "Use /etc/resolv.conf") {
-                HStack {
-                    Toggle("", isOn: $shouldUseResolv).toggleStyle(SwitchToggleStyle())
-                    Text("Set if it should use resolvconf to add DNS name servers in resolv.conf")
                         .frame(width: 200.0)
                         .font(.system(size: 9, weight: .light))
                 }

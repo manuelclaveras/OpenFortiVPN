@@ -37,7 +37,6 @@ struct GeneralPreferencesView: View {
 
                         if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
                             let result = dialog.url
-
                             if (result != nil) {
                                 defaultPath = result!.path
                             }
