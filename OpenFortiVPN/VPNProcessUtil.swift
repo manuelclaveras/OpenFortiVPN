@@ -35,7 +35,9 @@ class VPNProcessUtil {
         if let script = NSAppleScript(source: ascript) {
             NSLog("Starting openfortivpn")
             var err = NSDictionary()
-            let errPointer = AutoreleasingUnsafeMutablePointer<NSDictionary?>.init(&err)
+            let errPointer = withUnsafeMutablePointer(to: &err) {
+                AutoreleasingUnsafeMutablePointer<NSDictionary?>.init($0)
+            }
             script.executeAndReturnError(errPointer)
             return true
         }
@@ -63,7 +65,9 @@ class VPNProcessUtil {
         if let script = NSAppleScript(source: ascript) {
             NSLog("Killing openfortivpn")
             var err = NSDictionary()
-            let errPointer = AutoreleasingUnsafeMutablePointer<NSDictionary?>.init(&err)
+            let errPointer = withUnsafeMutablePointer(to: &err) {
+                AutoreleasingUnsafeMutablePointer<NSDictionary?>.init($0)
+            }
             script.executeAndReturnError(errPointer)
             return true
         }

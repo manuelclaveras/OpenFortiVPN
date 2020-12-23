@@ -71,7 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         if openfortivpn.isBackgroundProcessRunning() {
             //Kill it!
-            openfortivpn.killBackgroundProcess()
+            let _ = openfortivpn.killBackgroundProcess()
         }
     }
 
