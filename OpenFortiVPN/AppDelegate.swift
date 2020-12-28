@@ -22,12 +22,10 @@ extension Preferences.PaneIdentifier {
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    var window: NSWindow!
     var statusItem: NSStatusItem?
     var t: RepeatingTimer!
     var killedByUser: Bool = false
     var notificationSent: Bool = false
-    let openfortivpn = VPNProcessUtil.instance
     @IBOutlet weak var menu: NSMenu?
     @IBOutlet weak var connectMenuItem: NSMenuItem?
     
@@ -69,6 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
+        let openfortivpn = VPNProcessUtil()
         if openfortivpn.isBackgroundProcessRunning() {
             //Kill it!
             let _ = openfortivpn.killBackgroundProcess()
@@ -91,6 +90,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction private func connectToVPN(_ sender: NSMenuItem) {
+        let openfortivpn = VPNProcessUtil()
         //Detect openfortivpn installation
         if !openfortivpn.isOpenfortivpnInstalled() {
             let alert = NSAlert()
@@ -132,7 +132,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             //the process is still running
             t = RepeatingTimer(timeInterval: 20)
             t.eventHandler = {
-                let running = self.openfortivpn.isBackgroundProcessRunning()
+                let openfortivpn = VPNProcessUtil()
+                let running = openfortivpn.isBackgroundProcessRunning()
                 if !running {
                     //Change the state of the menuitem
                     sender.state = NSControl.StateValue.off
