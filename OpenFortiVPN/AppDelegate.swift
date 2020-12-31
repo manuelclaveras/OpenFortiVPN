@@ -114,6 +114,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 statusItem?.button?.image = NSImage(named: "DisconnectIcon")
                 statusItem?.button?.needsDisplay = true
                 self.killedByUser = true
+                t = nil //deinit the timer
                 return
             }
         }
@@ -135,15 +136,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     let openfortivpn = VPNProcessUtil()
                     let running = openfortivpn.isBackgroundProcessRunning()
                     if !running {
+                        let button = sender
+                        let statusBar = self.statusItem
                         //Change the state of the &menuitem
-                        sender.state = NSControl.StateValue.off
-                        sender.title = "Connect"
-                        self.statusItem?.button?.image = NSImage(named: "DisconnectIcon")
-                        self.statusItem?.button?.needsDisplay = true
+                        button.state = NSControl.StateValue.off
+                        button.title = "Connect"
+                        statusBar?.button?.image = NSImage(named: "DisconnectIcon")
+                        statusBar?.button?.needsDisplay = true
                         
                         //Send a notification
                         if !self.killedByUser {
-                            self.sendNotification(
+                            NotificationUtil.sendNotification(
                                 title: "Connections wit VPN lost",
                                 subtitle: "",
                                 body: "Click on Connect to restart a new connection"
@@ -155,19 +158,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             t.resume()
             
             //Send a notification to the user!
-            sendNotification(title: "Woohoo!", subtitle: "", body: "You're connected to the VPN")
+            NotificationUtil.sendNotification(title: "Woohoo!", subtitle: "", body: "You're connected to the VPN")
         }
-    }
-    
-    private func sendNotification(title: String, subtitle: String, body: String) {
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.subtitle = subtitle
-        content.body = body
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-        let request = UNNotificationRequest(identifier: "openfortivpn.id.1", content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 }
 

@@ -19,6 +19,7 @@
 		7E84156B258C0DF900D34B4E /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 7E84156A258C0DF900D34B4E /* Credits.rtf */; };
 		7E84156E258CAD3200D34B4E /* VPNProcessUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E84156D258CAD3200D34B4E /* VPNProcessUtil.swift */; };
 		7ED705CA258AC9FF00E3CB7F /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 7ED705C9258AC9FF00E3CB7F /* Defaults */; };
+		7EF001DC259DF92900EA4F73 /* NotificationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF001DB259DF92900EA4F73 /* NotificationUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		7E84156A258C0DF900D34B4E /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		7E84156D258CAD3200D34B4E /* VPNProcessUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNProcessUtil.swift; sourceTree = "<group>"; };
 		7EB696192593712C0000D82D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7EF001DB259DF92900EA4F73 /* NotificationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				7E225B862592262600CF2CD8 /* GeneralPreferencesView.swift */,
 				7E225B892592264200CF2CD8 /* AdvancedPreferencesView.swift */,
 				7E112238258A717500935F34 /* Preview Content */,
+				7EF001DB259DF92900EA4F73 /* NotificationUtil.swift */,
 			);
 			path = OpenFortiVPN;
 			sourceTree = "<group>";
@@ -210,6 +213,7 @@
 				7E112235258A717400935F34 /* PreferencesView.swift in Sources */,
 				7E112233258A717400935F34 /* AppDelegate.swift in Sources */,
 				7E3EA328258D1AB800EAFB1A /* RepeatingTimer.swift in Sources */,
+				7EF001DC259DF92900EA4F73 /* NotificationUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
