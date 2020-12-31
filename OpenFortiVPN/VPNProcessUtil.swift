@@ -70,6 +70,10 @@ class VPNProcessUtil {
                 AutoreleasingUnsafeMutablePointer<NSDictionary?>.init($0)
             }
             script.executeAndReturnError(errPointer)
+            if let message = err.value(forKey: "NSAppleScriptErrorMessage") {
+                NSLog("Error, cannot kill openfortivpn: \(message)")
+                return false
+            }
             return true
         }
 

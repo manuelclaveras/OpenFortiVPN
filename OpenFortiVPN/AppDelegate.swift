@@ -25,7 +25,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     var t: RepeatingTimer!
     var killedByUser: Bool = false
-    var notificationSent: Bool = false
     @IBOutlet weak var menu: NSMenu?
     @IBOutlet weak var connectMenuItem: NSMenuItem?
     
@@ -130,24 +129,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             //Set the background process in charge of checking if
             //the process is still running
-            t = RepeatingTimer(timeInterval: 20)
-            t.eventHandler = {
-                let openfortivpn = VPNProcessUtil()
-                let running = openfortivpn.isBackgroundProcessRunning()
-                if !running {
-                    //Change the state of the menuitem
-                    sender.state = NSControl.StateValue.off
-                    sender.title = "Connect"
-                    self.statusItem?.button?.image = NSImage(named: "DisconnectIcon")
-                    self.statusItem?.button?.needsDisplay = true
-                    
-                    //Send a notification
-                    if !self.killedByUser {
-                        self.sendNotification(
-                            title: "Connections wit VPN lost",
-                            subtitle: "",
-                            body: "Click on Connect to restart a new connection"
-                        )
+            if t == nil {
+                t = RepeatingTimer(timeInterval: 20)
+                t.eventHandler = {
+                    let openfortivpn = VPNProcessUtil()
+                    let running = openfortivpn.isBackgroundProcessRunning()
+                    if !running {
+                        //Change the state of the &menuitem
+                        sender.state = NSControl.StateValue.off
+                        sender.title = "Connect"
+                        self.statusItem?.button?.image = NSImage(named: "DisconnectIcon")
+                        self.statusItem?.button?.needsDisplay = true
+                        
+                        //Send a notification
+                        if !self.killedByUser {
+                            self.sendNotification(
+                                title: "Connections wit VPN lost",
+                                subtitle: "",
+                                body: "Click on Connect to restart a new connection"
+                            )
+                        }
                     }
                 }
             }
