@@ -14,38 +14,36 @@ extension Defaults.Keys {
     static let shouldSetDNS = Key<Bool>("shouldSetDNS", default: false)
     static let shouldUseResolv = Key<Bool>("shouldUseResolv", default: false)
     static let shouldUseSyslog = Key<Bool>("shouldUseSyslog", default: true)
+    static let shouldAutoReconnect = Key<Bool>("shouldAutoReconnect", default: true)
 }
 
 struct AdvancedPreferencesView: View {
     @Default(.shouldSetRoutes) private var shouldSetRoutes
     @Default(.shouldSetDNS) private var shouldSetDNS
     @Default(.shouldUseSyslog) private var shouldUseSyslog
+    @Default(.shouldAutoReconnect) private var shouldAutoReconnect
     var body: some View {
         Text("Do not change anything in this section unless you really know what you are doing!")
             .frame(width: 430.0, height: 40.0)
-        Preferences.Container(contentWidth: 450.0) {
-            Preferences.Section(title: "Set routes") {
+        Preferences.Container(contentWidth: 430.0) {
+            Preferences.Section(title: "Configure IP routes through the VPN when tunnel is up") {
                 HStack {
                     Toggle("", isOn: $shouldSetRoutes).toggleStyle(SwitchToggleStyle())
-                    Text("Set if it should try to configure IP routes through the VPN when tunnel is up")
-                        .frame(width: 200.0)
-                        .font(.system(size: 9, weight: .light))
                 }
             }
-            Preferences.Section(title: "Set DNS") {
+            Preferences.Section(title: "Add DNS name servers in resolv.conf when  tunnel is  up") {
                 HStack {
                     Toggle("", isOn: $shouldSetDNS).toggleStyle(SwitchToggleStyle())
-                    Text("Set if it should add DNS name servers in resolv.conf when  tunnel is  up")
-                        .frame(width: 200.0)
-                        .font(.system(size: 9, weight: .light))
                 }
             }
-            Preferences.Section(title: "Use syslog") {
+            Preferences.Section(title: "Log things in syslog") {
                 HStack {
                     Toggle("", isOn: $shouldUseSyslog).toggleStyle(SwitchToggleStyle())
-                    Text("Set if log things in syslog. This is recommended otherwise logs will be lost.")
-                        .frame(width: 200.0)
-                        .font(.system(size: 9, weight: .light))
+                }
+            }
+            Preferences.Section(title: "Automatically reconnect if connection is dropped") {
+                HStack {
+                    Toggle("", isOn: $shouldAutoReconnect).toggleStyle(SwitchToggleStyle())
                 }
             }
         }

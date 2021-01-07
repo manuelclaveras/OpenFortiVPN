@@ -137,7 +137,8 @@ class VPNProcessUtil {
         let shouldSetRoutes = Defaults[.shouldSetRoutes]
         let shouldSetDNS = Defaults[.shouldSetDNS]
         let shouldUseSyslog = Defaults[.shouldUseSyslog]
-
+        let shouldAutoReconnect = Defaults[.shouldAutoReconnect]
+        
         var baseCmd = "\(path)/openfortivpn \(host):\(port) -u \(user) -p \(pwd) "
 
         if !cert.isEmpty {
@@ -147,6 +148,7 @@ class VPNProcessUtil {
         baseCmd += "--set-dns=\(shouldSetDNS ? 1 : 0) "
         baseCmd += "--set-routes=\(shouldSetRoutes ? 1 : 0) "
         if shouldUseSyslog { baseCmd += "--use-syslog " }
+        if shouldAutoReconnect { baseCmd += "--persistent=3 " }
         baseCmd += " > /dev/null 2>&1 &"
 
         return baseCmd
