@@ -51,7 +51,6 @@ class RepeatingTimer {
     deinit {
         timer.setEventHandler {}
         timer.cancel()
-        resume()
         eventHandler = nil
     }
 }

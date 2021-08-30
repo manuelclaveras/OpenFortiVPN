@@ -58,7 +58,6 @@ class VPNProcessUtil {
         guard pid != nil else {
             return false
         }
-
         let id = String(pid!)
 
         let ascript: String = "do shell script \"kill -9 \(id)\" with administrator privileges"
@@ -147,8 +146,9 @@ class VPNProcessUtil {
 
         baseCmd += "--set-dns=\(shouldSetDNS ? 1 : 0) "
         baseCmd += "--set-routes=\(shouldSetRoutes ? 1 : 0) "
-        if shouldUseSyslog { baseCmd += "--use-syslog " }
         if shouldAutoReconnect { baseCmd += "--persistent=3 " }
+        if shouldUseSyslog { baseCmd += "--use-syslog " }
+
         baseCmd += " > /dev/null 2>&1 &"
 
         return baseCmd

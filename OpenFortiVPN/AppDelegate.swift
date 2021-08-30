@@ -82,6 +82,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let menu = menu {
             statusItem?.menu = menu
         }
+
+        //Set the background process in charge of checking if
+        //the process is still running
+        if t == nil {
+            t = RepeatingTimer(timeInterval: 20)
+            t.eventHandler = {
+                let openfortivpn = VPNProcessUtil()
+                let running = openfortivpn.isBackgroundProcessRunning()
+                if !running {
+                    let button = self.connectMenuItem
+                    let statusBar = self.statusItem
+                    
+                    //Change the state of the &menuitem
+                    DispatchQueue.main.async {
+                        button!.state = NSControl.StateValue.off
+                        button!.title = "Connect"
+                        statusBar?.button?.image = NSImage(named: "DisconnectIcon")
+                        statusBar?.button?.needsDisplay = true
+                    }
+                    
+                    //Send a notification
+                    if !self.killedByUser {
+                        NotificationUtil.sendNotification(
+                            title: "Connections wit VPN lost",
+                            subtitle: "",
+                            body: "Click on Connect to restart a new connection"
+                        )
+                    }
+                }
+            }
+        }
+        t.resume()
+
     }
 
     @IBAction private func preferencesMenuItemActionHandler(_ sender: NSMenuItem) {
@@ -128,34 +161,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             statusItem?.button?.image = NSImage(named: "Icon")
             statusItem?.button?.needsDisplay = true
             
-            //Set the background process in charge of checking if
-            //the process is still running
-            if t == nil {
-                t = RepeatingTimer(timeInterval: 20)
-                t.eventHandler = {
-                    let openfortivpn = VPNProcessUtil()
-                    let running = openfortivpn.isBackgroundProcessRunning()
-                    if !running {
-                        let button = sender
-                        let statusBar = self.statusItem
-                        //Change the state of the &menuitem
-                        button.state = NSControl.StateValue.off
-                        button.title = "Connect"
-                        statusBar?.button?.image = NSImage(named: "DisconnectIcon")
-                        statusBar?.button?.needsDisplay = true
-                        
-                        //Send a notification
-                        if !self.killedByUser {
-                            NotificationUtil.sendNotification(
-                                title: "Connections wit VPN lost",
-                                subtitle: "",
-                                body: "Click on Connect to restart a new connection"
-                            )
-                        }
-                    }
-                }
-            }
-            t.resume()
             
             //Send a notification to the user!
             NotificationUtil.sendNotification(title: "Woohoo!", subtitle: "", body: "You're connected to the VPN")
